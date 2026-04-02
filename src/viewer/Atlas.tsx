@@ -302,6 +302,16 @@ export function Atlas() {
     }
   };
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && currentPath.length > 1) {
+        dispatch({ type: "NAVIGATE", path: currentPath.slice(0, -1) });
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [currentPath, dispatch]);
+
   const items: WeightedItem[] = children.map((c) => ({
     ctx: c,
     weight: computeWeight(c),

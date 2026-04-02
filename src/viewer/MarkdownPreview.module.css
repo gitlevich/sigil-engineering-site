@@ -17,9 +17,13 @@
   padding-bottom: 1px;
 }
 
+.refWrapper {
+  position: relative;
+  display: inline;
+}
+
 .clickableRef {
   cursor: pointer;
-  position: relative;
 }
 
 .clickableRef:hover {
@@ -41,10 +45,13 @@
   line-height: 1.5;
   color: var(--text-primary);
   white-space: pre-wrap;
-  max-width: 420px;
-  min-width: 200px;
+  width: 500px;
+  max-width: 80vw;
+  max-height: 300px;
+  overflow-y: auto;
+  resize: both;
   box-shadow: 0 4px 16px var(--shadow);
-  pointer-events: none;
+  pointer-events: auto;
 }
 
 .preview h1,

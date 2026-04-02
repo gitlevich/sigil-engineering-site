@@ -17,12 +17,16 @@ function RefSpan({
   const [hovered, setHovered] = useState(false);
   return (
     <span
-      className={`${className} ${onClick ? styles.clickableRef : ""}`}
-      onClick={onClick ? (e) => { e.stopPropagation(); onClick(); } : undefined}
+      className={styles.refWrapper}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      {text}
+      <span
+        className={`${className} ${onClick ? styles.clickableRef : ""}`}
+        onClick={onClick ? (e) => { e.stopPropagation(); onClick(); } : undefined}
+      >
+        {text}
+      </span>
       {hovered && summary && (
         <span className={styles.refPopover}>{summary}</span>
       )}

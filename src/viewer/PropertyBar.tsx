@@ -22,12 +22,13 @@ function Chip({
   const [hovered, setHovered] = useState(false);
   return (
     <span
-      className={styles.chip}
-      style={{ color }}
+      className={styles.chipWrapper}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      {refPrefix}{name}
+      <span className={styles.chip} style={{ color }}>
+        {refPrefix}{name}
+      </span>
       {hovered && content && (
         <div className={styles.chipPopover}>{content}</div>
       )}
