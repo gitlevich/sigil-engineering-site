@@ -278,7 +278,7 @@ export default function App() {
               href="#/viewer"
               className="underline underline-offset-4 decoration-[var(--color-faint)] hover:decoration-[var(--color-bone)] transition-colors"
             >
-              The spec
+              The interactive spec
             </a>{" "}
             is the worked example — and the prompt for the Design Partner.
           </motion.p>
