@@ -58,6 +58,8 @@ export interface Ref {
   prefix: "@" | "#" | "!";
   summary: string;
   navigable: boolean;
+  /** For affordances/invariants, the name of the owning sigil to navigate to. */
+  navigateTo?: string;
 }
 
 /** Build the full lexical scope for the current path: contexts (@), affordances (#), invariants (!). */
@@ -100,27 +102,38 @@ export function buildLexicalScope(
 
   addContext(root.name, root);
 
-  // Flatten ontology refs
+  // Flatten ontology refs — include the ontology name itself and all descendants
   const ontologiesSigil = root.children.find((c) => c.name === "Libs");
   if (ontologiesSigil) {
     for (const ontology of ontologiesSigil.children) {
+      const key = `@${ontology.name}`;
+      if (!seen.has(key)) {
+        seen.add(key);
+        refs.push({ name: ontology.name, prefix: "@", summary: makeSummary(ontology), navigable: true });
+      }
       flattenOntologyRefs(ontology, seen, refs);
     }
   }
 
-  // Affordances and invariants of current context
-  for (const a of currentCtx.affordances) {
-    const key = `#${a.name}`;
-    if (!seen.has(key)) {
-      seen.add(key);
-      refs.push({ name: a.name, prefix: "#", summary: a.content, navigable: false });
+  // Affordances and invariants — walk current context and all ancestors
+  for (let depth = currentPath.length; depth >= 0; depth--) {
+    const levelPath = currentPath.slice(0, depth);
+    const levelCtx = findContext(root, levelPath);
+    const ownerName = levelCtx.name;
+    const isCurrentCtx = depth === currentPath.length;
+    for (const a of levelCtx.affordances) {
+      const key = `#${a.name}`;
+      if (!seen.has(key)) {
+        seen.add(key);
+        refs.push({ name: a.name, prefix: "#", summary: a.content, navigable: !isCurrentCtx, navigateTo: ownerName });
+      }
     }
-  }
-  for (const inv of currentCtx.invariants) {
-    const key = `!${inv.name}`;
-    if (!seen.has(key)) {
-      seen.add(key);
-      refs.push({ name: inv.name, prefix: "!", summary: inv.content, navigable: false });
+    for (const inv of levelCtx.invariants) {
+      const key = `!${inv.name}`;
+      if (!seen.has(key)) {
+        seen.add(key);
+        refs.push({ name: inv.name, prefix: "!", summary: inv.content, navigable: !isCurrentCtx, navigateTo: ownerName });
+      }
     }
   }
 

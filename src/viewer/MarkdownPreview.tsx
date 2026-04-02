@@ -163,7 +163,7 @@ function highlightRefs(
         text={match[0]}
         className={className}
         summary={ref.summary}
-        onClick={ref.navigable && onNavigate ? () => onNavigate(name) : undefined}
+        onClick={ref.navigable && onNavigate ? () => onNavigate(ref.navigateTo ?? name) : undefined}
       />
     );
     lastIndex = match.index + match[0].length;
