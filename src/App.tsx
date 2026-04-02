@@ -51,13 +51,13 @@ function Metric({ name, what }: { name: string; what: string }) {
 
 export default function App() {
   return (
-    <main className="max-w-3xl mx-auto py-24">
+    <main className="max-w-3xl mx-auto">
       {/* 1. Opening */}
-      <Section className="min-h-[80vh] items-center text-center">
+      <Section className="min-h-[100vh] items-center text-center relative">
         <motion.h1
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 1.5, ease: "easeOut" }}
+          transition={{ duration: 1.5, ease }}
           className="text-4xl md:text-5xl lg:text-6xl font-light leading-tight tracking-tight"
         >
           A shape in contrast space
@@ -65,11 +65,34 @@ export default function App() {
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 1.5, delay: 0.8, ease: "easeOut" }}
+          transition={{ duration: 1.5, delay: 0.8, ease }}
           className="mt-8 text-lg text-[var(--color-dim)]"
         >
           Sigil Engineering
         </motion.p>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.25, y: [0, 8, 0] }}
+          transition={{
+            opacity: { duration: 2, delay: 2.5, ease },
+            y: { duration: 2.5, repeat: Infinity, ease: "easeInOut" },
+          }}
+          className="absolute bottom-12 text-[var(--color-dim)] cursor-pointer"
+          onClick={() =>
+            window.scrollTo({ top: window.innerHeight, behavior: "smooth" })
+          }
+        >
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+          >
+            <path d="M4 7 L10 13 L16 7" />
+          </svg>
+        </motion.div>
       </Section>
 
       {/* 2. The Method */}
