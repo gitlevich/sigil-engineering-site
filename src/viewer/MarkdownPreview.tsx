@@ -23,7 +23,10 @@ function RefSpan({
     setHovered(true);
     if (triggerRef.current) {
       const rect = triggerRef.current.getBoundingClientRect();
-      setPos({ top: rect.bottom + 6, left: rect.left });
+      const popoverWidth = Math.min(500, window.innerWidth * 0.8);
+      const left = Math.max(8, Math.min(rect.left, window.innerWidth - popoverWidth - 8));
+      const top = rect.bottom + 6;
+      setPos({ top, left });
     }
   }, []);
 
@@ -49,7 +52,7 @@ function RefSpan({
         >
           {summary}
         </span>,
-        document.body
+        triggerRef.current?.closest(".sigil-viewer") ?? document.body
       )}
     </span>
   );
