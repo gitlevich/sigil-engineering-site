@@ -251,16 +251,60 @@ export default function App() {
       {/* Divider */}
       <div className="my-16 border-t border-[var(--color-faint)]" />
 
-      {/* 7. Closing */}
+      {/* 7. Worked Example */}
+      <Section>
+        <h2 className="text-2xl md:text-3xl font-light mb-12 text-[var(--color-dim)]">
+          Worked Example
+        </h2>
+        <div className="space-y-6 text-lg leading-relaxed">
+          <motion.p {...fade}>
+            This method was used to specify the tool that implements it.
+          </motion.p>
+          <motion.p {...fade}>
+            <a
+              href="https://github.com/gitlevich/sigil/tree/main/docs/specification/sigil-editor"
+              target="_blank"
+              rel="noopener"
+              className="underline underline-offset-4 decoration-[var(--color-faint)] hover:decoration-[var(--color-bone)] transition-colors"
+            >
+              The spec
+            </a>{" "}
+            is the worked example — and the prompt for the Design Partner.
+          </motion.p>
+          <motion.p {...fade}>
+            <a
+              href="https://github.com/gitlevich/sigil"
+              target="_blank"
+              rel="noopener"
+              className="underline underline-offset-4 decoration-[var(--color-faint)] hover:decoration-[var(--color-bone)] transition-colors"
+            >
+              The repo
+            </a>{" "}
+            is the code — a projection of that spec.
+          </motion.p>
+          <motion.p {...fade}>
+            <a
+              href="https://github.com/gitlevich/sigil/releases"
+              target="_blank"
+              rel="noopener"
+              className="underline underline-offset-4 decoration-[var(--color-faint)] hover:decoration-[var(--color-bone)] transition-colors"
+            >
+              The app
+            </a>{" "}
+            is downloadable.
+          </motion.p>
+        </div>
+      </Section>
+
+      {/* Divider */}
+      <div className="my-16 border-t border-[var(--color-faint)]" />
+
+      {/* 8. Closing */}
       <Section>
         <div className="space-y-6 text-lg leading-relaxed">
           <motion.p {...fade}>
             Any domain. Anyone who knows what they want and is willing to narrate
             it.
-          </motion.p>
-          <motion.p {...fade}>
-            Write a vision. The structure emerges. The partner checks coherence
-            and probes coverage. Code is a projection.
           </motion.p>
           <motion.p {...fade}>Spec in, working system out.</motion.p>
         </div>
