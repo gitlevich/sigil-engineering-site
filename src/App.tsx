@@ -1,4 +1,6 @@
+import { useState, useEffect } from "react";
 import { motion, type Easing } from "framer-motion";
+import { SigilViewer } from "./viewer/SigilViewer";
 
 const ease: Easing = "easeOut";
 
@@ -50,6 +52,18 @@ function Metric({ name, what }: { name: string; what: string }) {
 }
 
 export default function App() {
+  const [hash, setHash] = useState(window.location.hash);
+
+  useEffect(() => {
+    const onHashChange = () => setHash(window.location.hash);
+    window.addEventListener("hashchange", onHashChange);
+    return () => window.removeEventListener("hashchange", onHashChange);
+  }, []);
+
+  if (hash.startsWith("#/viewer")) {
+    return <SigilViewer />;
+  }
+
   return (
     <main className="max-w-3xl mx-auto">
       {/* 1. Opening */}
@@ -131,7 +145,7 @@ export default function App() {
         <div className="text-base leading-relaxed font-light">
           <Term
             name="Attention"
-            definition="the given. Precondition for first-person point of view"
+            definition="finite capacity to observe. The resource everything else runs on"
           />
           <Term
             name="Observer"
@@ -168,7 +182,7 @@ export default function App() {
           />
           <Term
             name="Collapse"
-            definition="superposition to definite state, preserving invariants"
+            definition="choosing one reading from many, preserving invariants"
           />
         </div>
       </Section>
@@ -182,8 +196,7 @@ export default function App() {
           Coherence
         </h2>
         <p className="text-[var(--color-dim)] mb-12">
-          Computed silently, surfaced only when broken. Five metrics measured in
-          contrast space.
+          Computed silently, surfaced only when broken.
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Metric
@@ -262,9 +275,7 @@ export default function App() {
           </motion.p>
           <motion.p {...fade}>
             <a
-              href="https://github.com/gitlevich/sigil/tree/main/docs/specification/sigil-editor"
-              target="_blank"
-              rel="noopener"
+              href="#/viewer"
               className="underline underline-offset-4 decoration-[var(--color-faint)] hover:decoration-[var(--color-bone)] transition-colors"
             >
               The spec
