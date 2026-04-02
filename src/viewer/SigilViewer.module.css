@@ -26,9 +26,11 @@
 .backLink {
   display: flex;
   align-items: center;
+  gap: 0.35rem;
   color: var(--text-secondary);
   text-decoration: none;
-  padding: 4px;
+  padding: 4px 8px;
+  font-size: 0.75rem;
 }
 
 .backLink:hover {

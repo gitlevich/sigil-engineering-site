@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, type Easing } from "framer-motion";
 import { SigilViewer } from "./viewer/SigilViewer";
 
@@ -53,12 +53,31 @@ function Metric({ name, what }: { name: string; what: string }) {
 
 export default function App() {
   const [hash, setHash] = useState(window.location.hash);
+  const specLinkRef = useRef<HTMLAnchorElement>(null);
+  const cameFromViewer = useRef(false);
+  const prevHashRef = useRef(window.location.hash);
 
   useEffect(() => {
-    const onHashChange = () => setHash(window.location.hash);
+    const onHashChange = () => {
+      const prev = prevHashRef.current;
+      const next = window.location.hash;
+      prevHashRef.current = next;
+      if (prev.startsWith("#/viewer") && !next.startsWith("#/viewer")) {
+        cameFromViewer.current = true;
+      }
+      setHash(next);
+    };
     window.addEventListener("hashchange", onHashChange);
     return () => window.removeEventListener("hashchange", onHashChange);
   }, []);
+
+  useEffect(() => {
+    if (cameFromViewer.current && specLinkRef.current) {
+      cameFromViewer.current = false;
+      specLinkRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+      specLinkRef.current.classList.add("pulse-attention");
+    }
+  }, [hash]);
 
   if (hash.startsWith("#/viewer")) {
     return <SigilViewer />;
@@ -275,6 +294,7 @@ export default function App() {
           </motion.p>
           <motion.p {...fade}>
             <a
+              ref={specLinkRef}
               href="#/viewer"
               className="underline underline-offset-4 decoration-[var(--color-faint)] hover:decoration-[var(--color-bone)] transition-colors"
             >

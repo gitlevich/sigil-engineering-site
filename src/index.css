@@ -26,3 +26,12 @@
     color: var(--color-ground);
   }
 }
+
+@keyframes pulse-attention {
+  0%, 100% { opacity: 0.85; }
+  50% { opacity: 1; }
+}
+
+.pulse-attention {
+  animation: pulse-attention 4s ease-in-out infinite;
+}
