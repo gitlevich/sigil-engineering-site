@@ -27,9 +27,7 @@
 }
 
 .clickableRef:hover {
-  opacity: 0.8;
-  background: var(--bg-hover);
-  border-radius: 2px;
+  opacity: 0.7;
 }
 
 .refPopover {
