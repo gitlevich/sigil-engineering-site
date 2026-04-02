@@ -85,8 +85,23 @@ export function MarkdownPreview({
     );
     // Deduplicate names (same name may appear with different prefixes)
     const unique = [...new Set(escaped)];
+    // Also generate inflected forms: -ed (past), -ing (continuous), -s (plural), -d (silent-e past)
+    const inflected: string[] = [];
+    for (const name of unique) {
+      inflected.push(name);
+      // e-ending verbs: Collapse → Collapsed, Collapsing
+      if (/e$/i.test(name)) {
+        inflected.push(name + "d");        // Collapsed
+        inflected.push(name.slice(0, -1) + "ing"); // Collapsing
+      } else {
+        inflected.push(name + "ed");       // Attended
+        inflected.push(name + "ing");      // Attending
+      }
+      inflected.push(name + "s");          // Collapses
+    }
+    const uniqueInflected = [...new Set(inflected)];
     return new RegExp(
-      `([@#!])(${unique.join("|")})(\\.[a-zA-Z_][a-zA-Z0-9_]*)?\\b`,
+      `([@#!])(${uniqueInflected.join("|")})(\\.[a-zA-Z_][a-zA-Z0-9_]*)?\\b`,
       "gi"
     );
   }, [refs]);
@@ -95,6 +110,16 @@ export function MarkdownPreview({
     const map: RefLookup = {};
     for (const r of refs) {
       map[`${r.prefix}${r.name.toLowerCase()}`] = r;
+      // Add inflected forms pointing to same ref
+      const name = r.name.toLowerCase();
+      if (name.endsWith("e")) {
+        map[`${r.prefix}${name}d`] = r;
+        map[`${r.prefix}${name.slice(0, -1)}ing`] = r;
+      } else {
+        map[`${r.prefix}${name}ed`] = r;
+        map[`${r.prefix}${name}ing`] = r;
+      }
+      map[`${r.prefix}${name}s`] = r;
     }
     return map;
   }, [refs]);
