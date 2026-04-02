@@ -31,9 +31,7 @@
 }
 
 .refPopover {
-  position: absolute;
-  top: calc(100% + 6px);
-  left: 0;
+  position: fixed;
   z-index: 200;
   background: var(--bg-primary);
   border: 1px solid var(--border);

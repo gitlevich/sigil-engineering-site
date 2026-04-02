@@ -1,4 +1,5 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useRef, useCallback } from "react";
+import { createPortal } from "react-dom";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import styles from "./MarkdownPreview.module.css";
@@ -15,10 +16,22 @@ function RefSpan({
   onClick?: () => void;
 }) {
   const [hovered, setHovered] = useState(false);
+  const [pos, setPos] = useState<{ top: number; left: number } | null>(null);
+  const triggerRef = useRef<HTMLSpanElement>(null);
+
+  const showPopover = useCallback(() => {
+    setHovered(true);
+    if (triggerRef.current) {
+      const rect = triggerRef.current.getBoundingClientRect();
+      setPos({ top: rect.bottom + 6, left: rect.left });
+    }
+  }, []);
+
   return (
     <span
       className={styles.refWrapper}
-      onMouseEnter={() => setHovered(true)}
+      ref={triggerRef}
+      onMouseEnter={showPopover}
       onMouseLeave={() => setHovered(false)}
     >
       <span
@@ -27,8 +40,16 @@ function RefSpan({
       >
         {text}
       </span>
-      {hovered && summary && (
-        <span className={styles.refPopover}>{summary}</span>
+      {hovered && summary && pos && createPortal(
+        <span
+          className={styles.refPopover}
+          style={{ top: pos.top, left: pos.left }}
+          onMouseEnter={showPopover}
+          onMouseLeave={() => setHovered(false)}
+        >
+          {summary}
+        </span>,
+        document.body
       )}
     </span>
   );
