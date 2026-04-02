@@ -53,30 +53,33 @@ export function buildPath(
   return null;
 }
 
-/** Build the full lexical scope for the current path. */
+export interface Ref {
+  name: string;
+  prefix: "@" | "#" | "!";
+  summary: string;
+  navigable: boolean;
+}
+
+/** Build the full lexical scope for the current path: contexts (@), affordances (#), invariants (!). */
 export function buildLexicalScope(
   root: Context,
   currentPath: string[]
-): { name: string; summary: string; kind: "contained" | "sibling" | "lib"; libPrefix?: string }[] {
-  const refs: { name: string; summary: string; kind: "contained" | "sibling" | "lib"; libPrefix?: string }[] = [];
+): Ref[] {
+  const refs: Ref[] = [];
   const seen = new Set<string>();
   const currentCtx = findContext(root, currentPath);
 
-  const add = (
-    name: string,
-    ctx: Context,
-    kind: "contained" | "sibling" | "lib",
-    libPrefix?: string
-  ) => {
-    if (!seen.has(name)) {
-      seen.add(name);
-      refs.push({ name, summary: makeSummary(ctx), kind, libPrefix });
+  const addContext = (name: string, ctx: Context) => {
+    const key = `@${name}`;
+    if (!seen.has(key)) {
+      seen.add(key);
+      refs.push({ name, prefix: "@", summary: makeSummary(ctx), navigable: true });
     }
   };
 
   // Children of current context
   for (const c of currentCtx.children) {
-    add(c.name, c, "contained");
+    addContext(c.name, c);
   }
 
   // Walk up ancestry
@@ -86,22 +89,38 @@ export function buildLexicalScope(
     const parentPath = levelPath.slice(0, -1);
     const parentCtx = findContext(root, parentPath);
 
-    add(levelCtx.name, levelCtx, "sibling");
+    addContext(levelCtx.name, levelCtx);
 
     for (const c of parentCtx.children) {
       if (c.name !== levelCtx.name) {
-        add(c.name, c, "sibling");
+        addContext(c.name, c);
       }
     }
   }
 
-  add(root.name, root, "sibling");
+  addContext(root.name, root);
 
   // Flatten ontology refs
   const ontologiesSigil = root.children.find((c) => c.name === "Libs");
   if (ontologiesSigil) {
     for (const ontology of ontologiesSigil.children) {
-      flattenOntologyRefs(ontology, seen, ontology.name, refs);
+      flattenOntologyRefs(ontology, seen, refs);
+    }
+  }
+
+  // Affordances and invariants of current context
+  for (const a of currentCtx.affordances) {
+    const key = `#${a.name}`;
+    if (!seen.has(key)) {
+      seen.add(key);
+      refs.push({ name: a.name, prefix: "#", summary: a.content, navigable: false });
+    }
+  }
+  for (const inv of currentCtx.invariants) {
+    const key = `!${inv.name}`;
+    if (!seen.has(key)) {
+      seen.add(key);
+      refs.push({ name: inv.name, prefix: "!", summary: inv.content, navigable: false });
     }
   }
 
@@ -124,19 +143,14 @@ function makeSummary(ctx: Context): string {
 function flattenOntologyRefs(
   ctx: Context,
   seen: Set<string>,
-  ontologyName: string,
-  refs: { name: string; summary: string; kind: "contained" | "sibling" | "lib"; libPrefix?: string }[]
+  refs: Ref[]
 ) {
   for (const child of ctx.children) {
-    if (!seen.has(child.name)) {
-      seen.add(child.name);
-      refs.push({
-        name: child.name,
-        summary: makeSummary(child),
-        kind: "lib",
-        libPrefix: ontologyName,
-      });
+    const key = `@${child.name}`;
+    if (!seen.has(key)) {
+      seen.add(key);
+      refs.push({ name: child.name, prefix: "@", summary: makeSummary(child), navigable: true });
     }
-    flattenOntologyRefs(child, seen, ontologyName, refs);
+    flattenOntologyRefs(child, seen, refs);
   }
 }

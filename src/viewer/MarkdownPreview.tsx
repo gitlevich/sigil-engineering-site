@@ -2,7 +2,14 @@ import { useMemo, useState, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import type { Ref } from "./utils";
 import styles from "./MarkdownPreview.module.css";
+
+const STYLE_FOR_PREFIX: Record<string, string> = {
+  "@": "ref-context",
+  "#": "ref-affordance",
+  "!": "ref-invariant",
+};
 
 function RefSpan({
   text,
@@ -58,45 +65,39 @@ function RefSpan({
   );
 }
 
-interface SiblingInfo {
-  name: string;
-  summary: string;
-  kind: string;
-}
-
 interface MarkdownPreviewProps {
   content: string;
-  siblingNames: string[];
-  siblings: SiblingInfo[];
+  refs: Ref[];
   onNavigate?: (name: string) => void;
 }
 
-type RefMap = Record<string, { summary: string; kind: string }>;
+type RefLookup = Record<string, Ref>;
 
 export function MarkdownPreview({
   content,
-  siblingNames,
-  siblings,
+  refs,
   onNavigate,
 }: MarkdownPreviewProps) {
-  const siblingPattern = useMemo(() => {
-    if (siblingNames.length === 0) return null;
-    const escaped = siblingNames.map((n) =>
-      n.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+  const pattern = useMemo(() => {
+    if (refs.length === 0) return null;
+    const escaped = refs.map((r) =>
+      r.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
     );
+    // Deduplicate names (same name may appear with different prefixes)
+    const unique = [...new Set(escaped)];
     return new RegExp(
-      `@(${escaped.join("|")})(\\.[a-zA-Z_][a-zA-Z0-9_]*)?\\b`,
+      `([@#!])(${unique.join("|")})(\\.[a-zA-Z_][a-zA-Z0-9_]*)?\\b`,
       "gi"
     );
-  }, [siblingNames]);
+  }, [refs]);
 
-  const refMap = useMemo<RefMap>(() => {
-    const map: RefMap = {};
-    for (const s of siblings) {
-      map[s.name.toLowerCase()] = { summary: s.summary, kind: s.kind };
+  const lookup = useMemo<RefLookup>(() => {
+    const map: RefLookup = {};
+    for (const r of refs) {
+      map[`${r.prefix}${r.name.toLowerCase()}`] = r;
     }
     return map;
-  }, [siblings]);
+  }, [refs]);
 
   const stripped = useMemo(() => {
     if (content.startsWith("---")) {
@@ -111,16 +112,16 @@ export function MarkdownPreview({
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         components={
-          siblingPattern
+          pattern
             ? {
                 p: ({ children, ...props }) => (
                   <p {...props}>
-                    {highlightChildStrings(children, siblingPattern, refMap, onNavigate)}
+                    {highlightChildStrings(children, pattern, lookup, onNavigate)}
                   </p>
                 ),
                 li: ({ children, ...props }) => (
                   <li {...props}>
-                    {highlightChildStrings(children, siblingPattern, refMap, onNavigate)}
+                    {highlightChildStrings(children, pattern, lookup, onNavigate)}
                   </li>
                 ),
               }
@@ -136,7 +137,7 @@ export function MarkdownPreview({
 function highlightRefs(
   text: string,
   pattern: RegExp,
-  refMap: RefMap,
+  lookup: RefLookup,
   onNavigate?: (name: string) => void
 ): (string | React.ReactElement)[] {
   const parts: (string | React.ReactElement)[] = [];
@@ -147,17 +148,22 @@ function highlightRefs(
     if (match.index > lastIndex) {
       parts.push(text.slice(lastIndex, match.index));
     }
-    const baseName = match[1];
-    const info = refMap[baseName.toLowerCase()];
-    const className =
-      info?.kind === "sibling" ? "ref-sibling" : "ref-contained";
+    const prefix = match[1];
+    const name = match[2];
+    const ref = lookup[`${prefix}${name.toLowerCase()}`];
+    if (!ref) {
+      parts.push(match[0]);
+      lastIndex = match.index + match[0].length;
+      continue;
+    }
+    const className = STYLE_FOR_PREFIX[prefix] || "ref-context";
     parts.push(
       <RefSpan
         key={match.index}
         text={match[0]}
         className={className}
-        summary={info?.summary || ""}
-        onClick={onNavigate ? () => onNavigate(baseName) : undefined}
+        summary={ref.summary}
+        onClick={ref.navigable && onNavigate ? () => onNavigate(name) : undefined}
       />
     );
     lastIndex = match.index + match[0].length;
@@ -171,16 +177,16 @@ function highlightRefs(
 function highlightChildStrings(
   children: React.ReactNode,
   pattern: RegExp,
-  refMap: RefMap,
+  lookup: RefLookup,
   onNavigate?: (name: string) => void
 ): React.ReactNode {
   if (typeof children === "string") {
-    return <>{highlightRefs(children, pattern, refMap, onNavigate)}</>;
+    return <>{highlightRefs(children, pattern, lookup, onNavigate)}</>;
   }
   if (Array.isArray(children)) {
     return children.map((child, i) => {
       if (typeof child === "string") {
-        return <span key={i}>{highlightRefs(child, pattern, refMap, onNavigate)}</span>;
+        return <span key={i}>{highlightRefs(child, pattern, lookup, onNavigate)}</span>;
       }
       return child;
     });

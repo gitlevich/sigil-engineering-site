@@ -21,7 +21,7 @@ function VisionPanel({ vision }: { vision: string }) {
   }
   return (
     <div className={styles.visionPanel}>
-      <MarkdownPreview content={vision} siblingNames={[]} siblings={[]} />
+      <MarkdownPreview content={vision} refs={[]} />
     </div>
   );
 }
@@ -77,7 +77,6 @@ function ViewerContent() {
     () => buildLexicalScope(sigil.root, currentPath),
     [sigil.root, currentPath]
   );
-  const siblingNames = useMemo(() => refs.map((r) => r.name), [refs]);
 
   const handleRefNavigate = useCallback((name: string) => {
     // Check children first
@@ -187,8 +186,7 @@ function ViewerContent() {
             ) : (
               <MarkdownPreview
                 content={currentCtx.domain_language}
-                siblingNames={siblingNames}
-                siblings={refs}
+                refs={refs}
                 onNavigate={handleRefNavigate}
               />
             )}
