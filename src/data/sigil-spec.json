@@ -9,7 +9,7 @@
     "children": [
       {
         "name": "SigilEditor",
-        "domain_language": "---\nstatus: implemented\n---\n\n# Sigil Editor\n\nSigil Editor is an application I am designing to write specs based on @sigils.\n\nI #State-vision of the app in a dedicates place. I want it to be always one click away to remember the goal I pursue: I tend to get distracted easily. \n\nI #Name-affordances: what should the app do for me. I try to be as precise as i can. I can always name them more precisely. And, I can always ask my @DesignPartner for naming advice. \n\nI narrate in a comfortable @Editor. As I type, I recognize some words, like `Editor` or `DesignPartner`, as sigils: my emergent domain language. \n\nI continue through the affordances. As I type, the @OntologyTree on the left shows me the emerging structure. Another way to navigate, and visualize, the emergent sigil tree is via @Atlas: a tree map that flattens the sigil tree into a 2D plane. This way I can see the structure: denser places, holes. \n\nI #declare-invariants as I understand them, to make the boundaries of my @sigil explicitly defined. ",
+        "domain_language": "---\nstatus: implemented\n---\n\n# Sigil Editor\n\nSigil Editor is an application I am designing to write specs based on @sigils.\n\nI #State-vision of the app in a dedicates place. I want it to be always one click away to remember the goal I pursue: I tend to get distracted easily. \n\nI #Name-affordances: what should the app do for me. I try to be as precise as i can. I can always name them more precisely. And, I can always ask my @DesignPartner for naming advice. \n\nI narrate in a comfortable @Editor. As I type, I recognize some words, like `Editor` or `DesignPartner`, as @sigils: my emergent domain language. \n\nI continue through the affordances. As I type, the @OntologyTree on the left shows me the emerging structure. Another way to navigate, and visualize, the emergent @sigil tree is via @Atlas: a tree map that flattens the @sigil tree into a 2D plane. This way I can see the structure: denser places, holes. \n\nI #declare-invariants as I understand them, to make the boundaries of my @sigil explicitly defined. ",
         "affordances": [
           {
             "name": "declare-invariants",
@@ -77,7 +77,7 @@
         "children": [
           {
             "name": "Atlas",
-            "domain_language": "---\nstatus: implemented\n---\n\n# Atlas\n\nA treemap that flattens the @sigil tree into a 2D plane. I use it to see what I cannot see in the @OntologyTree: the shape of the whole. Dense regions mean heavily decomposed areas. Empty space means structure not yet articulated.\n\nI can #navigate into any context by double-clicking. I can toggle between focused (one level) and revealed (all levels). Right-click gives me the same operations as the @OntologyTree: rename, delete, open in Finder.\n",
+            "domain_language": "---\nstatus: implemented\n---\n\n# Atlas\n\nA treemap that flattens the @sigil tree into a 2D plane. I use it to see what I cannot see in the @OntologyTree: the shape of the whole. Dense regions mean heavily decomposed areas. Empty space means structure not yet articulated.\n\nI can @SigilEditor#navigate into any @sigil by double-clicking. I can toggle between focused (one level) and revealed (all levels). Right-click gives me the same operations as the @OntologyTree: rename, delete, open in Finder.\n",
             "affordances": [],
             "invariants": [
               {
@@ -89,7 +89,7 @@
           },
           {
             "name": "DesignPartner",
-            "domain_language": "---\nstatus: stub\n---\n\n# Design Partner\n\nAn agent that inhabits the entire @sigil (!full-context). Language in, language out.\n\n**Coherence.** Computed silently, surfaced only when broken. Ancestor @sigils are in scope and binding — contradicting an ancestor's term or violating an inherited @invariant is incoherent. Same concept in a different branch with different affordances and invariants is fine. @CoherenceMetric handles measurement and tracks drift over time.\n\n**Coverage.** The vision sentences are trajectories through the @sigil tree. The partner traces each one and finds where it falls off the edge. The shape of the gap constrains what fills it (!gravity). The partner surfaces gaps and degrees of freedom; the author decides (!author-decides). @Coverage is complete when every vision sentence traces without falling off and every leaf is collapsed or in declared superposition.",
+            "domain_language": "---\nstatus: stub\n---\n\n# Design Partner\n\nAn agent that inhabits the entire @sigil (!full-context). Language in, language out.\n\n**Coherence.** Computed silently, surfaced only when broken. Ancestor @sigils are in scope and binding — contradicting an ancestor's term or violating an inherited @invariant is incoherent. Same concept in a different branch with different affordances and invariants is fine. @CoherenceMetric handles measurement and tracks drift over time.\n\n**@Coverage.** The vision sentences are trajectories through the @sigil tree. The partner traces each one and finds where it falls off the edge. The shape of the gap constrains what fills it (@Coverage!gravity). The partner surfaces gaps and degrees of freedom; the author decides (@Coverage!author-decides). @Coverage is complete when every vision sentence traces without falling off and every leaf is collapsed or in declared superposition.",
             "affordances": [
               {
                 "name": "chat",
@@ -99,39 +99,25 @@
             "invariants": [
               {
                 "name": "full-context",
-                "content": "The partner inhabits the entire @sigil — all language, affordances, invariants, children, and imported ontologies. Partial view means misleading measurement and misleading suggestions. Without the whole shape, neither @CoherenceMetric nor @Coverage can function."
+                "content": "The partner inhabits the entire @sigil — all language, affordances, invariants, children, and imported ontologies. Partial view means misleading measurement and misleading suggestions. Without the whole shape, neither @CoherenceMetric nor @Coverage can function.\n"
               }
             ],
             "children": [
               {
-                "name": "ChatPanel",
-                "domain_language": "---\nstatus: implemented\n---\n\n# Chat Panel\n\nThe right panel where I converse with the @DesignPartner. The partner has the entire @sigil in scope — all language, affordances, invariants, and the imported ontologies. I narrate what I'm thinking; the partner reflects, questions, and suggests.\n\nThe conversation persists across sessions. I can have multiple conversations and switch between them.\n",
-                "affordances": [],
-                "invariants": [],
-                "children": []
-              },
-              {
-                "name": "Checklist",
-                "domain_language": "---\nstatus: idea\n---\n\n# Checklist\n\nQuestions the partner asks itself before asking the author. Not metrics — judgments that require conversation. Bucket for things that may turn out useful.\n\n- Are there @contrasts the affordances imply that no @invariant addresses?\n- Does the @sigil name still fit after renames and evolution, beyond what @CoherenceMetric#measure-name-fit can catch numerically?\n- Are there affordances that feel like they belong together but are scattered across sibling sigils?\n- Is an invariant enforcing a @preference that none of the affordances actually exercise?\n- Is a leaf genuinely in superposition, or did the author just not get to it yet?\n- Is the @Editor UX getting too complex? (Was !simplicity-of-ux — real constraint, but no measurable contrast/preference yet.)\n",
-                "affordances": [],
-                "invariants": [],
-                "children": []
-              },
-              {
                 "name": "CoherenceMetric",
-                "domain_language": "---\nstatus: idea\n---\n\n# Coherence Metric\n\nA number computed from a whole @sigil's shape in @ContrastSpace. Input: a whole sigil. Output: a number in an interpretable range. Out of range = the spec's language no longer agrees with itself.\n\nOne sigil, many projections (spec, code, visuals), one shape. If the projections disagree, the shape is fractured. The metrics detect this — drift accumulated through renames, refinements, decomposition.\n",
+                "domain_language": "---\nstatus: idea\n---\n\n# Coherence Metric\n\nA number computed from a whole @sigil's shape in @ContrastSpace (!whole-sigil). Input: a whole sigil. Output: a number in an interpretable range (!numeric). Out of range = the spec's language no longer agrees with itself.\n\nCoherenceMetric detects drift. Each local decision during spec evolution — a rename, a decomposition, a moved affordance — was locally coherent. But the accumulated result may not be. Names written for a concept that was later renamed. Descriptions phrased for a structure that was later reorganized. Icons designed for a term that no longer exists. The metrics catch this: the spec partially describes what it used to be, not what it currently is.\n\nOne sigil, many projections (spec, code, visuals), one shape. If the projections disagree, the shape is fractured. CoherenceMetric checks not just spec-against-spec, but spec-against-all-projections. An icon described as \"radio signals\" but attached to a concept now called \"invariant\" is a fracture — the visual projection disagrees with the spec.\n",
                 "affordances": [
                   {
                     "name": "measure-affordance-affinity",
-                    "content": "---\nstatus: idea\n---\n\n# Measure Affordance Affinity\n\nFor each affordance, ratio of distance-to-parent vs distance-to-nearest-uncle in @ContrastSpace. Below 1 = correctly placed. Above 1 = closer to an uncle, probably misplaced. Aggregate: fraction correctly placed.\n"
+                    "content": "---\nstatus: idea\n---\n\n# Measure Affordance Affinity\n\nFor each affordance, ratio of distance-to-parent vs distance-to-nearest-uncle in @ContrastSpace. Below 1 = correctly placed. Above 1 = closer to an uncle, probably misplaced. Aggregate: fraction correctly placed.\n\nConfirms sibling separation from the affordance's perspective. An affordance equidistant to two siblings belongs on neither — it belongs on their parent.\n"
                   },
                   {
                     "name": "measure-boundary-sharpness",
-                    "content": "---\nstatus: idea\n---\n\n# Measure Boundary Sharpness\n\nSubspace alignment between @invariant embeddings and content embeddings in @ContrastSpace. High = invariants span the same subspace as the content. Low = invariants are aspirational, not structural — they don't describe the actual boundary of what this @sigil is.\n"
+                    "content": "---\nstatus: idea\n---\n\n# Measure Boundary Sharpness\n\nSubspace alignment between @invariant embeddings and content embeddings in @ContrastSpace. High = invariants span the same subspace as the content. Low = invariants are aspirational, not structural — they don't describe the actual boundary of what this @sigil is.\n\nAn invariant that can't state its @contrast and @preference precisely is a @Coverage question, not an invariant.\n"
                   },
                   {
                     "name": "measure-language-flow",
-                    "content": "---\nstatus: idea\n---\n\n# Measure Language Flow\n\nWord count per affordance description, normalized against tree depth. Few words = the structure carries the meaning. Many words = the model is wrong and language is compensating. Outliers across the spec are where the sigil decomposition or naming is forcing the author to explain what should be obvious.\n"
+                    "content": "---\nstatus: idea\n---\n\n# Measure Language Flow\n\nWord count per affordance description, normalized against tree depth. Few words = the structure carries the meaning. Many words = the model is wrong and language is compensating.\n\nGrounds !language-flow on @SigilEditor with a computable metric.\n"
                   },
                   {
                     "name": "measure-name-fit",
@@ -139,19 +125,28 @@
                   },
                   {
                     "name": "measure-sibling-separation",
-                    "content": "---\nstatus: idea\n---\n\n# Measure Sibling Separation\n\nSilhouette score across sibling @sigil clusters in @ContrastSpace. High = siblings carve the domain at real joints. Low = siblings overlap, may need merging. Internal gap within one sibling suggests it should split.\n"
+                    "content": "---\nstatus: idea\n---\n\n# Measure Sibling Separation\n\nSilhouette score across sibling @sigil clusters in @ContrastSpace. High = siblings carve the domain at real joints. Low = siblings overlap, may need merging. Internal gap within one sibling suggests it should split.\n\nAlso catches duplicated affordances across siblings — same operation on two sigils signals it belongs on the parent.\n"
                   },
                   {
                     "name": "track-over-time",
-                    "content": "---\nstatus: idea\n---\n\n# Track Over Time\n\nSnapshot all metrics on each commit. Show trends. Converging spec = metrics tightening. Drifting spec = metrics degrading after renames or reorganizations that haven't settled.\n"
+                    "content": "---\nstatus: idea\n---\n\n# Track Over Time\n\nSnapshot all metrics on each commit. Show trends. Converging spec = metrics tightening. Drifting spec = metrics degrading after renames or reorganizations that haven't settled.\n\nThe vision says \"converge the spec by measuring coherence over time.\" This affordance makes \"over time\" concrete: a time series of metric values across the spec's evolution.\n"
                   }
                 ],
-                "invariants": [],
+                "invariants": [
+                  {
+                    "name": "numeric",
+                    "content": "A coherence metric takes a whole @sigil as input and produces a number in an interpretable range. Not a judgment, not a suggestion — a number. Out of range = coherence violation. If it can't be computed without author input, it's not a metric — it belongs in @Coverage.\n"
+                  },
+                  {
+                    "name": "whole-sigil",
+                    "content": "Every metric operates on the whole @sigil, not fragments. A fragment has no coherence. Coherence is a property of the whole shape in @ContrastSpace.\n"
+                  }
+                ],
                 "children": []
               },
               {
                 "name": "Coverage",
-                "domain_language": "---\nstatus: idea\n---\n\n# Coverage\n\nVision sentences are trajectories through the @sigil tree (!vision-is-the-test). Trace each one. Where it falls off the edge, that's a gap. The shape of the gap constrains what fills it (!gravity). The partner surfaces gaps; the author fills them (!author-decides).\n\nComplete when every vision sentence traces without falling off and every leaf is collapsed or in declared superposition.\n",
+                "domain_language": "---\nstatus: idea\n---\n\n# Coverage\n\nVision sentences are trajectories through the @sigil tree (!vision-is-the-test). Trace each one. Where it falls off the edge, that's a gap. The shape of the gap constrains what fills it (!gravity). The partner surfaces gaps; the author fills them (!author-decides).\n\nComplete when every vision sentence traces without falling off and every leaf is collapsed or in declared superposition.\n\nA leaf is either collapsed (specified precisely enough) or in superposition (intentionally unspecified). The ambiguous middle — where an implementing agent would have to guess whether the author cares — is the coverage gap. The partner's job is to surface the distinction.\n\nCoverage is not just \"have you specified enough\" but \"does your language allow statements you haven't prepared for?\" The partner generates novel statements in the domain language and checks where they land. If a valid statement produces a trajectory through unmapped surface, either tighten the language or narrate the trajectory.\n",
                 "affordances": [
                   {
                     "name": "identify-stop",
@@ -169,15 +164,15 @@
                 "invariants": [
                   {
                     "name": "author-decides",
-                    "content": "The partner surfaces gaps and gravity. The author decides what to do: decompose further, declare superposition, or tighten the language. The partner never fills a gap without the author.\n"
+                    "content": "The partner surfaces gaps and degrees of freedom. The author decides: decompose further, declare superposition, or tighten the language. The partner never fills a gap without the author.\n"
                   },
                   {
                     "name": "gravity",
-                    "content": "Gaps are filled by what the surrounding context demands, not by invention. The parent sigil, the sibling sigils, the inherited @invariants, and the vision sentence that exposed the gap together constrain the name, the affordances, and the placement of what fills it. If the fill doesn't follow from the surroundings, it's wrong.\n"
+                    "content": "Gaps are filled by what the surrounding context demands, not by invention. The parent @sigil, the sibling sigils, the inherited @invariants, and the vision sentence that exposed the gap together constrain the name, the affordances, and the placement of what fills it. If the fill doesn't follow from the surroundings, it's wrong.\n"
                   },
                   {
                     "name": "vision-is-the-test",
-                    "content": "Coverage is always measured against the vision sentences. They are the reference scenarios. A gap only matters if a vision sentence falls through it. Structure that no vision sentence traverses is either premature or belongs to a different sigil.\n"
+                    "content": "Coverage is always measured against the vision sentences. They are the reference scenarios — the trajectories the spec must support. A gap only matters if a vision sentence falls through it. Structure that no vision sentence traverses is either premature or belongs to a different @sigil.\n"
                   }
                 ],
                 "children": []
@@ -341,7 +336,7 @@
           },
           {
             "name": "OntologyTree",
-            "domain_language": "---\nstatus: implemented\n---\n\n# Ontology Tree\n\nThe left panel. Shows the @sigil tree along the structural axis (!structural-projection): branching, depth, parent-child relationships.\n\nI can #search to filter by name, #move or #drag to rearrange, #delete to remove, #add-peer to create a sibling. Cross-cutting affordances (#navigate, #rename) are on @SigilEditor.\n\nWhat I see must match what exists: !structural-truth is non-negotiable.\n",
+            "domain_language": "---\nstatus: implemented\n---\n\n# Ontology Tree\n\nThe left panel. Shows the @sigil tree along the structural axis (!structural-projection): branching, depth, parent-child relationships.\n\nI can #search to filter by name, #move or #drag to rearrange, #delete to remove, #add-peer to create a sibling. Cross-cutting affordances (@Editor#navigate, @Editor#rename) are on @SigilEditor.\n\nWhat I see must match what exists: !structural-truth is non-negotiable.\n",
             "affordances": [
               {
                 "name": "add-peer",
@@ -426,7 +421,7 @@
               },
               {
                 "name": "Contrast",
-                "domain_language": "---\nstatus: external-ontology\n---\n\n# Contrast\n\nA dimension along which @attention discriminates. A @preference selects a region along it. Contrasts are axes of @ContrastSpace.\n\nTwo primitive kinds: oppositional (two poles: good/bad, safe/dangerous) and relational (gradient with direction: more/less, near/far).\n\nContrasts compose. A compound contrast weaves primitives into a higher-@scale discrimination — neither primitive alone carries the meaning, but together they define a single distinction.",
+                "domain_language": "---\nstatus: external-ontology\n---\n\n# Contrast\n\nA dimension along which @attention discriminates. A @preference selects a region along it. Contrasts are axes of @ContrastSpace.\n\nTwo primitive kinds: oppositional (two poles: good/bad, safe/dangerous) and relational (gradient with direction: more/less, near/far).\n\nContrasts compose. A compound contrast weaves primitives into a higher-@scale discrimination — neither primitive alone carries the meaning, but together they define a single distinction.\n\nA contrast by itself is just an axis of discrimination — not a contract. It becomes contractual only when a @sigil binds a @preference to it as an @invariant.",
                 "affordances": [],
                 "invariants": [],
                 "children": []
@@ -495,7 +490,7 @@
                 "children": [
                   {
                     "name": "SpatialResolution",
-                    "domain_language": "---\nstatus: external-ontology\n---\n\n# Spatial Resolution\n\nHow finely @attention distinguishes structure within a @frame. The number of @contrasts discriminated simultaneously.",
+                    "domain_language": "---\nstatus: external-ontology\n---\n\n# Spatial Resolution\n\nHow finely @attention distinguishes structure within a @frame. The number of @contrasts discriminated simultaneously.\n\nIn a @sigil tree, spatial resolution = leaf granularity. Each decomposition level adds a degree of freedom — more joints on the finger, more precision in the grasp.",
                     "affordances": [],
                     "invariants": [],
                     "children": []
@@ -518,7 +513,7 @@
               },
               {
                 "name": "Sigil",
-                "domain_language": "---\nstatus: external-ontology\n---\n\n# Sigil\n\nA shape in @ContrastSpace. Closed over the @contrasts it cares about — within it, @preferences hold along those axes (!relevant-preferences-enforced). Open along all other contrasts — their values are in superposition.\n\nPowered by the @attention of the @agent that inhabits it. Filter @observations by relevant contrasts, @collapse into @narrative.\n\nTo an agent, any sigil is a pattern recognized and preferred along the distance axis.\n\nEmergent sigils are powered by multiple agents' attentions: the market, a language, a constitution. Agents agree to follow shared @invariants, creating structure at a higher @scale.\n\n@EcologicalPsychology@Surface describes the sigil boundary.",
+                "domain_language": "---\nstatus: external-ontology\n---\n\n# Sigil\n\nA shape in @ContrastSpace. Closed over the @contrasts it cares about — within it, @preferences hold along those axes (!relevant-preferences-enforced). Open along all other contrasts — their values are in superposition.\n\nPowered by the @attention of the @agent that inhabits it. Filter @observations by relevant contrasts, @collapse into @narrative.\n\nTo an agent, any sigil is a pattern recognized and preferred along the distance axis.\n\nEmergent sigils are powered by multiple agents' attentions: the market, a language, a constitution. Agents agree to follow shared @invariants, creating structure at a higher @scale.\n\n@EcologicalPsychology@Surface describes the sigil boundary.\n\nA sigil tree is a function approximation: single input (statement in the domain language), output (expected behavior). Each level of decomposition adds a degree of freedom. @SpatialResolution of the spec = leaf granularity. More articulation = more precision.\n\nThe sigil is the contract. @Contrasts are the dimensions the contract measures. @Invariants are the clauses. @Preferences are the acceptable ranges. A @contrast by itself is just an axis of discrimination — it becomes contractual only when a sigil binds a preference to it.\n\nEnterable = sigil. Doable = @EcologicalPsychology@Affordance. If you can inhabit it, it's a sigil. If you can perform it, it's an affordance.",
                 "affordances": [
                   {
                     "name": "inhabit",
@@ -539,7 +534,7 @@
               },
               {
                 "name": "SigilEngineering",
-                "domain_language": "---\nstatus: external-ontology\n---\n\n# Sigil Engineering\n\nThe practice of converting lived experience to @sigils. Name the @contrasts you care about, state your @preferences, bind them as @invariants, define the @affordances. ",
+                "domain_language": "---\nstatus: external-ontology\n---\n\n# Sigil Engineering\n\nThe practice of converting lived experience to @sigils. Name the @contrasts you care about, state your @preferences, bind them as @invariants, define the @affordances.\n\nFixed point: the spec for Sigil Engineering is written using Sigil Engineering. The method specifies itself — the spec, the method, and the language are the same shape.\n\nDomain-agnostic. Any domain. Write a vision, narrate affordances, decompose. The partner checks coherence and probes coverage. The tool doesn't need to know the domain — the domain language emerges from narration.",
                 "affordances": [],
                 "invariants": [],
                 "children": []
